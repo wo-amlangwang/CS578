@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
+import sys
 
 
 def drop_by_name(df, name):
+    print("[+]Droping {0}".format(name))
     df.drop(name, axis=1, inplace=True)
 
 
@@ -24,14 +26,18 @@ def to_xy(df, target):
 
 
 def encode_category(df, name):
+    print("[+]Encoding {0}".format(name))
     df[name] = df[name].astype('category')
     df[name] = df[name].cat.codes
     df[name] = df[name].replace(-1, np.nan)
-    print("encoding {0}".format(name))
 
 
-df = pd.read_csv("/Users/fangzhoulin/Documents/Data/train_10_precent.csv",
-                 header=0, sep=",", index_col=0, parse_dates=True)
+if len(sys.argv) < 2:
+    print('[-]Usage : python {0} <source-file>'.format(sys.argv[0]))
+    exit()
+
+filename = sys.argv[1]
+df = pd.read_csv(filename, header=0, sep=",", index_col=0, parse_dates=True)
 drop_by_name(df, 'OrganizationIdentifier')
 drop_by_name(df, 'SmartScreen')
 drop_by_name(df, 'Census_IsWIMBootEnabled')
@@ -44,44 +50,14 @@ drop_by_name(df, 'PuaMode')
 drop_by_name(df, 'Census_InternalPrimaryDisplayResolutionHorizontal')
 drop_by_name(df, 'Census_InternalPrimaryDisplayResolutionVertical')
 
-'''
-encode_category(df, 'AvSigVersion')
-encode_category(df, 'AppVersion')
-encode_category(df, 'Census_FlightRing')
-encode_category(df, 'EngineVersion')
-encode_category(df, 'Census_ActivationChannel')
-encode_category(df, 'Census_GenuineStateName')
-encode_category(df, 'Census_OSWUAutoUpdateOptionsName')
-encode_category(df, 'Census_OSSkuName')
-encode_category(df, 'OsVer')
-encode_category(df, 'Census_OSInstallTypeName')
-encode_category(df, 'Census_OSEdition')
-encode_category(df, 'OsPlatformSubRelease')
-encode_category(df, 'OsBuildLab')
-encode_category(df, 'Census_OSBranch')
-encode_category(df, 'Census_OSArchitecture')
-encode_category(df, 'Census_OSVersion')
-encode_category(df, 'SkuEdition')
-encode_category(df, 'Census_PowerPlatformRoleName')
-encode_category(df, 'Census_ChassisTypeName')
-encode_category(df, 'Census_MDC2FormFactor')
-encode_category(df, 'Census_PrimaryDiskTypeName')
-encode_category(df, 'Census_DeviceFamily')
-encode_category(df, 'Processor')
-encode_category(df, 'ProductName')
-encode_category(df, 'Platform')
-encode_category(df, 'Census_InternalBatteryNumberOfCharges')
-'''
 for column in df:
     if column == 'HasDetections':
         continue
     encode_category(df, column)
 
 df = df.dropna()
-
-print(df.isnull().sum().sort_values())
-
-with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-    print(df.head(5))
-print(df.shape)
-df.to_csv("/Users/fangzhoulin/Documents/Data/train_10_precent_preprocessed.csv", sep=',')
+_index = filename.rfind('.')
+new_filename = "{0}_preprocessed.csv".format(filename[:_index])
+print('[+]Storing file into {0}'.format(new_filename))
+df.to_csv(new_filename, sep=',')
+print('[+]Done')
