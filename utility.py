@@ -8,7 +8,7 @@ def extract_feature_from_tree(tree, feature_name):
         if i == -2:
             continue
         feature_set.add(feature_name[i])
-    return feature_set
+    return list(feature_set)
 
 
 def store_model(file_name, model):

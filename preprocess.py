@@ -32,12 +32,24 @@ def encode_category(df, name):
     df[name] = df[name].replace(-1, np.nan)
 
 
+def encode_text_dummy(df, name):
+    print("[+]Encoding {0}".format(name))
+    dummies = pd.get_dummies(df[name])
+    for x in dummies.columns:
+        dummy_name = "{}-{}".format(name, x)
+        df[dummy_name] = dummies[x]
+    df.drop(name, axis=1, inplace=True)
+
 if len(sys.argv) < 2:
     print('[-]Usage : python {0} <source-file>'.format(sys.argv[0]))
     exit()
-
+selected_feature = ['Census_IsVirtualDevice', 'EngineVersion', 'Census_PrimaryDiskTotalCapacity', 'AVProductStatesIdentifier',
+ 'Census_OSVersion', 'Census_OSUILocaleIdentifier', 'AvSigVersion', 'Census_TotalPhysicalRAM', 'OsBuildLab',
+ 'AVProductsInstalled', 'Census_OSInstallTypeName', 'AppVersion', 'Census_InternalPrimaryDiagonalDisplaySizeInInches',
+ 'RtpStateBitfield', 'Census_ActivationChannel']
 filename = sys.argv[1]
 df = pd.read_csv(filename, header=0, sep=",", index_col=0, parse_dates=True)
+
 drop_by_name(df, 'OrganizationIdentifier')
 drop_by_name(df, 'SmartScreen')
 drop_by_name(df, 'Census_IsWIMBootEnabled')
@@ -50,11 +62,12 @@ drop_by_name(df, 'PuaMode')
 drop_by_name(df, 'Census_InternalPrimaryDisplayResolutionHorizontal')
 drop_by_name(df, 'Census_InternalPrimaryDisplayResolutionVertical')
 
+df = df[selected_feature]
 for column in df:
     if column == 'HasDetections':
         continue
-    encode_category(df, column)
-
+    encode_text_dummy(df, column)
+print('[+]Shape after encoding {0}'.format(df.shape))
 df = df.dropna()
 _index = filename.rfind('.')
 new_filename = "{0}_preprocessed.csv".format(filename[:_index])
