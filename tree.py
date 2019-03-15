@@ -1,7 +1,8 @@
 from sklearn import tree
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+from utility import extract_feature_from_tree
+
 from inspect import getmembers
 
 train = pd.read_csv("/Users/fangzhoulin/Downloads/train.csv",
@@ -20,6 +21,6 @@ _y = (test.iloc[:, -1]).as_matrix()
 
 clf = tree.DecisionTreeClassifier(max_depth=11)
 clf = clf.fit(x, y)
-print( getmembers( clf.tree_ ) )
+print(extract_feature_from_tree(clf, train.columns.values))
 
 
