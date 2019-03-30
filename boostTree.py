@@ -12,15 +12,17 @@ y_train =train.iloc[:,-1]
 x_test = test.iloc[:,:70]
 y_test = test.iloc[:,-1]
 
-seed = 7
-num_trees = 30
-from sklearn.ensemble import GradientBoostingClassifier
-clf = GradientBoostingClassifier(random_state=seed)
-clf = clf.fit(x_train, y_train)
+num_trees_arr = np.array([100,200,300])
 
-print(clf.score(x_test, y_test))
-
-import pickle
-# save the classifier
-with open('gradientTree.pkl', 'wb') as f:
-    pickle.dump(clf, f)
+for i in num_trees_arr:
+    for j in range(5,16):
+        num_trees = i
+        depth = j
+        from sklearn.ensemble import AdaBoostClassifier
+        from sklearn.tree import DecisionTreeClassifier
+        clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=depth), algorithm="SAMME.R", n_estimators=num_trees)
+        clf = clf.fit(x_train, y_train)
+        print("num of trees:" + str(i))
+        print("depth:" + str(j))
+        print(clf.score(x_train, y_train))
+        print(clf.score(x_test, y_test))
