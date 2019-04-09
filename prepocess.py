@@ -40,7 +40,7 @@ test_name = "test.csv"
 df_train = pd.read_csv(train_name, sep=',', header= 0,index_col=0)
 # df_test = pd.read_csv(test_name, sep=',', header= 0,index_col=0)
 
-df_train = df_train.sample(frac=0.1, replace=False, random_state=777)
+df_train = df_train.sample(frac=0.2, replace=False, random_state=777)
 
 # selected_feature = ['Census_IsVirtualDevice', 'EngineVersion', 'Census_PrimaryDiskTotalCapacity', 'AVProductStatesIdentifier',
 # 'Census_OSVersion', 'Census_OSUILocaleIdentifier',  'Census_TotalPhysicalRAM', 'OsBuildLab',
@@ -67,8 +67,8 @@ df_train = df_train.sample(frac=0.1, replace=False, random_state=777)
 # df.sort_values(by = ['AvSigVersion'])
 # df.to_csv("train1_processed_sorted.csv", sep=',', header = True, index = True)
 
-train, val = train_test_split(df_train, test_size=0.1)
+train, test = train_test_split(df_train, test_size=0.1)
 print(train.head(5))
-print(val.head(5))
+print(test.head(5))
 train.to_csv("train_raw.csv", sep = ',',header = True, index = True)
-val.to_csv("val.csv", sep = ',',header = True, index = True)
+test.to_csv("test_raw.csv", sep = ',',header = True, index = True)

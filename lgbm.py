@@ -7,18 +7,21 @@ import random
 from lightgbm import LGBMClassifier
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
-train = pd.read_csv("train_encoded.csv", sep = ',', header=0, index_col=0)
-test = pd.read_csv("val_encoded.csv", sep = ',', header=0, index_col=0)
+df_train = pd.read_csv("train_encoded.csv", sep = ',', header=0, index_col=0)
+# test = pd.read_csv("test_encoded.csv", sep = ',', header=0, index_col=0)
+
+train, val = train, test = train_test_split(df_train, test_size=0.1)
 
 x_train = train.iloc[:,:-1]
 y_train =train.iloc[:,-1]
 
-x_test = test.iloc[:,:-1]
-y_test = test.iloc[:,-1]
+x_val = val.iloc[:,:-1]
+y_val = val.iloc[:,-1]
 
 #LightGBM parameters
 lgbm = LGBMClassifier(
@@ -41,10 +44,10 @@ lgbm = LGBMClassifier(
     n_jobs=-1)
 
 lgbm.fit(x_train, y_train,
-         eval_set=[(x_train, y_train), (x_test, y_test)],
+         eval_set=[(x_train, y_train), (x_val, y_val)],
          eval_metric='auc',
-         verbose=250,
+         verbose=100,
          early_stopping_rounds=100)
 
-prediction = lgbm.predict(x_test)
-print("acc: " + str(accuracy_score(y_test, prediction)))
+prediction = lgbm.predict(x_val)
+print("acc: " + str(accuracy_score(y_val, prediction)))

@@ -14,7 +14,7 @@ import seaborn as sb
 # dataFolder = '../input/'
 submissionFileName = 'submission'
 trainFile = 'train_raw.csv'
-testFile = 'val.csv'
+testFile = 'test_raw.csv'
 # used 4000000 nr of rows in stead of 8000000 because of Kernel memory issue
 
 seed = 6001
@@ -238,7 +238,7 @@ for feature in features:
     print(feature)
 
 train.to_csv("train_encoded.csv", sep=',', header=True, index=True)
-test.to_csv("val_encoded.csv", sep=',', header=True, index=True)
+test.to_csv("test_encoded.csv", sep=',', header=True, index=True)
 
     # # CV Folds
 # folds = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
