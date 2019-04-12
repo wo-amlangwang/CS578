@@ -35,12 +35,12 @@ import random
 # def drop_by_name(df, name):
 #     df.drop(name, axis=1, inplace=True)
 
-train_name = "train8m.csv"
+train_name = "train.csv"
 test_name = "test.csv"
 df_train = pd.read_csv(train_name, sep=',', header= 0,index_col=0)
 # df_test = pd.read_csv(test_name, sep=',', header= 0,index_col=0)
 
-df_train = df_train.sample(frac=0.2, replace=False, random_state=777)
+#df_train = df_train.sample(frac=0.2, replace=False, random_state=777)
 
 # selected_feature = ['Census_IsVirtualDevice', 'EngineVersion', 'Census_PrimaryDiskTotalCapacity', 'AVProductStatesIdentifier',
 # 'Census_OSVersion', 'Census_OSUILocaleIdentifier',  'Census_TotalPhysicalRAM', 'OsBuildLab',

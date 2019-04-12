@@ -15,7 +15,7 @@ y_test = test.iloc[:,-1]
 num_trees = 1000
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
-clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=2), algorithm="SAMME.R", n_estimators=num_trees)
+clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=5), algorithm="SAMME.R", n_estimators=num_trees)
 clf = clf.fit(x_train, y_train)
 
 print(clf.score(x_train, y_train))

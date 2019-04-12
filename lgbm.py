@@ -4,6 +4,7 @@ import pandas as pd
 import gc
 import time
 import random
+import pickle
 from lightgbm import LGBMClassifier
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.metrics import accuracy_score
@@ -51,3 +52,5 @@ lgbm.fit(x_train, y_train,
 
 prediction = lgbm.predict(x_val)
 print("acc: " + str(accuracy_score(y_val, prediction)))
+print('Feature importances:', list(lgbm.feature_importance()))
+pickle.dump(lgbm, open('model.sav', 'wb'))
